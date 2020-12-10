@@ -69,6 +69,13 @@
             <version>5.1.8</version>
         </dependency>
 
+        <!--mybatisplus核心库-->
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-boot-starter</artifactId>
+            <version>3.4.0</version>
+        </dependency>
+
         <!--实现数据缓存-->
         <!-- spring boot redis 缓存引入-->
         <dependency>

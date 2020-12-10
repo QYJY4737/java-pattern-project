@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.congee.api.mapper.PatInfoMapper">
+    <resultMap id="BaseResultMap" type="cn.congee.api.entity.PatInfo">
+        <id column="pat_id" jdbcType="INTEGER" property="patId" />
+        <result column="pat_name" jdbcType="VARCHAR" property="patName" />
+        <result column="pat_pass" jdbcType="VARCHAR" property="patPass" />
+        <result column="pat_age" jdbcType="INTEGER" property="patAge" />
+        <result column="pat_gender" jdbcType="VARCHAR" property="patGender" />
+        <result column="pat_address" jdbcType="VARCHAR" property="patAddress" />
+        <result column="pat_phone" jdbcType="VARCHAR" property="patPhone" />
+        <result column="pat_idcard" jdbcType="VARCHAR" property="patIdcard" />
+    </resultMap>
+    <sql id="Base_Column_List">
+    pat_id, pat_name, pat_pass, pat_age, pat_gender, pat_address, pat_phone, pat_idcard
+  </sql>
+    <select id="findById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM pat_info
+        WHERE pat_id = #{patId,jdbcType = BIGINT}
+    </select>
+    <update id="updatePatName" parameterType="cn.congee.api.entity.PatInfo">
+        UPDATE
+        pat_info
+        SET
+        pat_name = #{patName,jdbcType = VARCHAR},
+        pat_pass = #{patPass,jdbcType = VARCHAR},
+        pat_age = #{patAge,jdbcType = BIGINT},
+        pat_gender = #{patGender,jdbcType = VARCHAR},
+        pat_address = #{patAddress,jdbcType = VARCHAR},
+        pat_phone = #{patPhone,jdbcType = VARCHAR},
+        pat_idcard = #{patIdcard,jdbcType = VARCHAR}
+        WHERE
+        pat_id = #{patId,jdbcType = BIGINT}
+    </update>
+    <select id="findLikeConcat" parameterType="java.lang.String" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"></include>
+        FROM
+        pat_info
+        WHERE
+        pat_name LIKE CONCAT ('%', #{keyword},'%')
+        OR
+        pat_pass LIKE CONCAT ('%', #{keyword},'%')
+        OR
+        pat_gender LIKE CONCAT ('%', #{keyword},'%')
+        OR
+        pat_address LIKE CONCAT ('%', #{keyword},'%')
+        OR
+        pat_phone LIKE CONCAT ('%', #{keyword},'%')
+        OR
+        pat_idcard LIKE CONCAT ('%', #{keyword},'%')
+        AND 1 = 1
+    </select>
+    <insert id="savePatInfo" parameterType="cn.congee.api.entity.PatInfo">
+        INSERT INTO
+        pat_info(pat_name,pat_pass,pat_age,pat_gender,pat_address,pat_phone,pat_idcard)
+        VALUES
+        (#{patName,jdbcType = VARCHAR},
+        #{patPass,jdbcType = VARCHAR},
+        #{patAge,jdbcType = BIGINT},
+        #{patGender,jdbcType = VARCHAR},
+        #{patAddress,jdbcType = VARCHAR},
+        #{patPhone,jdbcType = VARCHAR},
+        #{patIdcard,jdbcType = VARCHAR})
+    </insert>
+    <delete id="deletePatInfoById" parameterType="java.lang.Integer">
+        DELETE FROM
+        pat_info
+        WHERE
+        pat_id = #{patId,jdbcType = BIGINT}
+    </delete>
+    <select id="findAll" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"></include>
+        FROM
+        pat_info
+        WHERE
+        1 = 1
+    </select>
+    <select id="findPatInfoByIdNo" resultMap="BaseResultMap" parameterType="java.lang.String">
+        SELECT
+        <include refid="Base_Column_List"></include>
+        FROM
+        pat_info
+        WHERE
+        pat_idcard = #{idNo,jdbcType = VARCHAR}
+        AND
+        1 = 1
+    </select>
+    <select id="searchByPatGenderAsFOrM" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"></include>
+        FROM
+        pat_info
+        WHERE
+        pat_gender
+        IN
+        ('F','M')
+    </select>
+    <update id="updateBatch" parameterType="list" keyProperty="id" useGeneratedKeys="true">
+        <foreach collection="list" index="index" item="item" open="" separator=";" close="">
+            UPDATE
+            pat_info
+            <set>
+                pat_name = #{item.patName,jdbcType = VARCHAR},
+                pat_pass = #{item.patPass,jdbcType = VARCHAR},
+                pat_age = #{item.patAge,jdbcType = BIGINT},
+                pat_gender = #{item.patGender,jdbcType = VARCHAR},
+                pat_address = #{item.patAddress,jdbcType = VARCHAR},
+                pat_phone = #{item.patPhone,jdbcType = VARCHAR},
+                pat_idcard = #{item.patIdcard,jdbcType = VARCHAR}
+            </set>
+            WHERE
+            pat_id = #{item.patId,jdbcType = VARCHAR}
+        </foreach>
+    </update>
+    <select id="findPatInfoByPatNameAndPatGender" parameterType="java.lang.String" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"></include>
+        FROM
+        pat_info
+        WHERE
+        pat_name = #{patName,jdbcType = VARCHAR}
+        AND
+        pat_idcard = #{patIdcard,jdbcType = VARCHAR}
+    </select>
+    <select id="findByName" resultMap="BaseResultMap" parameterType="java.lang.String">
+        SELECT
+        <include refid="Base_Column_List"></include>
+        FROM
+        pat_info
+        WHERE
+        pat_name = #{patName,jdbcType = VARCHAR}
+        AND
+        1 = 1
+    </select>
+    <select id="findByPhone" resultMap="BaseResultMap" parameterType="java.lang.String">
+        SELECT
+        <include refid="Base_Column_List"></include>
+        FROM
+        pat_info
+        WHERE
+        pat_phone = #{patPhone,jdbcType = VARCHAR}
+        AND
+        1 = 1
+    </select>
+    <select id="queryTheSameAge" resultType="cn.congee.api.entity.PatInfo">
+        SELECT
+        <include refid="Base_Column_List"></include>
+        FROM
+        pat_info
+        WHERE
+        pat_age
+        IN
+        <foreach collection="ages" open="(" close=")" separator="," item="age">
+            #{age}
+        </foreach>
+        AND
+        1 = 1
+    </select>
+</mapper>

@@ -1,8 +1,6 @@
 package cn.congee.api;
 
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
-
+import cn.congee.api.constants.GlobalConstants;
 import lombok.extern.slf4j.Slf4j;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
@@ -18,8 +16,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.client.RestTemplate;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
-import javax.annotation.PostConstruct;
-
 /**
  * @Author: yang
  * @Date: 2020-12-10 12:30
@@ -33,16 +29,6 @@ import javax.annotation.PostConstruct;
 @EnableSwagger2
 public class JavaPatternProjectApplication extends SpringBootServletInitializer {
 
-    @Value("${server.port}")
-    private String SERVER_PORT;
-
-    private static String APPLICATION_YML_SERVER_PORT;
-
-    @PostConstruct
-    private void init(){
-        APPLICATION_YML_SERVER_PORT = SERVER_PORT;
-    }
-
     @Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
         return builder.sources(JavaPatternProjectApplication.class);
@@ -52,7 +38,7 @@ public class JavaPatternProjectApplication extends SpringBootServletInitializer 
         long start = System.currentTimeMillis();
         SpringApplication.run(JavaPatternProjectApplication.class,args);
         long end = System.currentTimeMillis();
-        log.info("服务启动耗时为：" + (end - start) + "ms,服务端口为: " + APPLICATION_YML_SERVER_PORT);
+        log.info("服务启动耗时为：" + (end - start) + "ms,服务端口为: " + GlobalConstants.APPLICATION_YML_SERVER_PORT);
     }
 
     /**

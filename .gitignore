@@ -1,0 +1,14 @@
+*.iml
+*.ipr
+*.iws
+*.lck
+*.log
+target/
+.ideaDataSources
+dataSources
+.idea
+src/main/resources/logback-spring.xml
+.idea/
+*test.java
+*/test/
+*/.attah_pid*

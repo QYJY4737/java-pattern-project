@@ -64,5 +64,3 @@ mybatis:
     aggressive-lazy-loading: false #按需加载字段(加载字段由SQL指定),不会加载关联表的所有字段,以提高性能
     lazy-loading-enabled: false #查询时,关闭关联对象及时加载以提高性能
     cache-enabled: true #全局映射器启用缓存
-swagger:
-  enabled: true
