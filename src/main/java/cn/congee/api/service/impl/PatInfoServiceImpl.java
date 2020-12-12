@@ -1,6 +1,7 @@
 package cn.congee.api.service.impl;
 
 import cn.congee.api.common.JsonResult;
+import cn.congee.api.common.PageResult;
 import cn.congee.api.constants.GlobalConstants;
 import cn.congee.api.entity.PatInfo;
 import cn.congee.api.exception.BaseExceptionMsg;
@@ -15,6 +16,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -174,6 +176,29 @@ public class PatInfoServiceImpl implements PatInfoService {
         String patNames = patInfoList.stream().map(PatInfo::getPatName).collect(Collectors.joining(","));
         log.info("patNames=[{}] " + patNames);
         return new JsonResult(list);
+    }
+
+    /**
+     * 分页查询
+     * @param page 当前页数
+     * @param size 每页行数
+     * @return
+     */
+    @Override
+    public PageResult<PatInfo> getPatInfoList(Integer page, Integer size) {
+        Validates.mustNotNull(page, BaseExceptionMsg.PARAMS_MUST_NOT_NULL);
+        Validates.mustNotNull(size, BaseExceptionMsg.PARAMS_MUST_NOT_NULL);
+        List<PatInfo> patInfoList = patInfoMapper.findAll();
+        List<PatInfo> list = new ArrayList<>();
+        patInfoList.stream().forEach(item -> {
+            if(StringUtils.isNotBlank(item.getPatIdcard())){
+                item.setBirthday(IdcardUtils.getBirthDay(item.getPatIdcard()));
+            }
+            list.add(item);
+        });
+        List<PatInfo> lastResult = list.subList(Math.min(size * page, list.size()), Math.min(size * (page + 1), list.size()));
+        //first 为false表示还有下一页
+        return new PageResult<>(page, size, list.size(), lastResult);
     }
 
     private String getCacheKey(Integer patId) {

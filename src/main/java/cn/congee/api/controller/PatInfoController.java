@@ -1,6 +1,7 @@
 package cn.congee.api.controller;
 
 import cn.congee.api.common.JsonResult;
+import cn.congee.api.common.PageResult;
 import cn.congee.api.entity.PatInfo;
 import cn.congee.api.service.PatInfoService;
 import com.alibaba.fastjson.JSON;
@@ -61,6 +62,13 @@ public class PatInfoController {
     @ApiOperation(value = "[6]-模糊查询")
     public JsonResult<List<PatInfo>> findLikeConcat(@RequestParam(value = "keyword") String keyword){
         return patInfoService.findLikeConcat(keyword);
+    }
+
+    @GetMapping("/searchByPageAndSize/{page}/{size}")
+    @ApiOperation(value = "[7]-分页查询用户信息")
+    public JsonResult<PageResult<PatInfo>> searchByPageAndSize(@PathVariable(value = "page") Integer page,
+                                                               @PathVariable(value = "size") Integer size){
+        return new JsonResult(patInfoService.getPatInfoList(page, size));
     }
 
 }

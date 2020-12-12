@@ -1,6 +1,7 @@
 package cn.congee.api.service;
 
 import cn.congee.api.common.JsonResult;
+import cn.congee.api.common.PageResult;
 import cn.congee.api.entity.PatInfo;
 
 import java.util.List;
@@ -57,5 +58,13 @@ public interface PatInfoService {
      * @return
      */
     JsonResult<List<PatInfo>> findLikeConcat(String keyword);
+
+    /**
+     * 分页查询
+     * @param page
+     * @param size
+     * @return
+     */
+    PageResult<PatInfo> getPatInfoList(Integer page, Integer size);
 
 }
