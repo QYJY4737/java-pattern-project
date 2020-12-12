@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -200,6 +201,34 @@ public class PatInfoServiceImpl implements PatInfoService {
         //first 为false表示还有下一页
         return new PageResult<>(page, size, list.size(), lastResult);
     }
+
+    /**
+     * lambda常用表达式
+     *
+     */
+    @Override
+    public JsonResult<List<PatInfo>> commonExpressions() {
+        List<PatInfo> list = patInfoMapper.findAll();
+        //获取id的集合 其他字段获取类似 getPatId换成想要的字段名即可
+        List<Integer> ids = list.stream().map(PatInfo::getPatId).collect(Collectors.toList());
+
+        //返回年龄最大的用户是多少岁
+        Integer biggestAge = list.stream().map(PatInfo::getPatAge).max(Integer::compare).get();
+
+        //返回年龄大于20岁的用户集合
+        List<PatInfo> lg20 = list.stream().filter(item -> {
+            return item.getPatAge() > 20;
+        }).collect(Collectors.toList());
+
+        //根据年龄降序排序用户 默认升序 加上reversed()方法就是降序
+        List<PatInfo> sortByAge = list.stream().sorted(Comparator.comparing(PatInfo::getPatAge).reversed()).collect(Collectors.toList());
+
+        //根据xx分组
+        Map<String, List<PatInfo>> map = list.stream().collect(Collectors.groupingBy(PatInfo::getPatAddress));
+
+        return new JsonResult<>(list);
+    }
+
 
     private String getCacheKey(Integer patId) {
         return GlobalConstants.APPLICATION_YML_SERVER_PORT + "::" + patId;

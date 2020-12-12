@@ -1,5 +1,7 @@
 package cn.congee.api.entity;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 
 import java.io.Serializable;
@@ -13,54 +15,36 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)         //自动的给model bean实现equals方法和hashcode方法。
+@ApiModel(value = "用户信息表")
 public class PatInfo implements Serializable {
 
     private static final long serialVersionUID = -1L;
 
-    /**
-     * 用户ID 绝对唯一
-     */
+    @ApiModelProperty(value = "用户ID")
     private Integer patId;
 
-    /**
-     * 用户名
-     */
+    @ApiModelProperty(value = "用户名")
     private String patName;
 
-    /**
-     * 密码
-     */
+    @ApiModelProperty(value = "密码")
     private String patPass;
 
-    /**
-     * 年龄
-     */
+    @ApiModelProperty(value = "年龄")
     private Integer patAge;
 
-    /**
-     * 性别
-     */
+    @ApiModelProperty(value = "性别")
     private String patGender;
 
-    /**
-     * 地址
-     */
+    @ApiModelProperty(value = "地址")
     private String patAddress;
 
-    /**
-     * 手机
-     */
+    @ApiModelProperty(value = "手机")
     private String patPhone;
 
-    /**
-     * 身份证
-     */
+    @ApiModelProperty(value = "身份证")
     private String patIdcard;
 
-    /**
-     * 生日
-     */
+    @ApiModelProperty(value = "生日")
     private String birthday;
-
 
 }

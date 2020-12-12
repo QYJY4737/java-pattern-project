@@ -67,4 +67,10 @@ public interface PatInfoService {
      */
     PageResult<PatInfo> getPatInfoList(Integer page, Integer size);
 
+    /**
+     * lambda常用表达式
+     *
+     */
+    JsonResult<List<PatInfo>> commonExpressions();
+
 }
