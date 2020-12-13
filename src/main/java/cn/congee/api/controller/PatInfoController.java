@@ -11,6 +11,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -69,6 +71,28 @@ public class PatInfoController {
     public JsonResult<PageResult<PatInfo>> searchByPageAndSize(@PathVariable(value = "page") Integer page,
                                                                @PathVariable(value = "size") Integer size){
         return new JsonResult(patInfoService.getPatInfoList(page, size));
+    }
+
+    /**
+     * Cron表达式参数分别表示：
+     *
+     * 秒（0~59） 例如0/5表示每5秒
+     * 分（0~59）
+     * 时（0~23）
+     * 日（0~31）的某天，需计算
+     * 月（0~11）
+     * 周几（ 可填1-7 或 SUN/MON/TUE/WED/THU/FRI/SAT）
+     * @Scheduled：除了支持灵活的参数表达式cron之外，还支持简单的延时操作，例如 fixedDelay ，fixedRate 填写相应的毫秒数即可。
+     * @return
+     */
+    //@Scheduled(cron = "0/5 * * * * ?")
+    @PostMapping("/addPatInfo")
+    @ApiOperation(value = "[8]-定时添加随机用户信息")
+    public JsonResult addPatInfo(){
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        log.error("执行静态定时任务时间: " + format.format(new Date()));
+
+        return patInfoService.addPatInfo();
     }
 
 }
