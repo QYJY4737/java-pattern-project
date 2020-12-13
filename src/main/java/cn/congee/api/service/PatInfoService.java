@@ -73,4 +73,11 @@ public interface PatInfoService {
      */
     JsonResult<List<PatInfo>> commonExpressions();
 
+    /**
+     * 新增随机用户信息
+     *
+     * @return
+     */
+    JsonResult addPatInfo();
+
 }

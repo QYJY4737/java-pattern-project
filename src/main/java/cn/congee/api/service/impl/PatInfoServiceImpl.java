@@ -2,12 +2,15 @@ package cn.congee.api.service.impl;
 
 import cn.congee.api.common.JsonResult;
 import cn.congee.api.common.PageResult;
+import cn.congee.api.constants.CommonDic;
 import cn.congee.api.constants.GlobalConstants;
 import cn.congee.api.entity.PatInfo;
 import cn.congee.api.exception.BaseExceptionMsg;
 import cn.congee.api.mapper.PatInfoMapper;
 import cn.congee.api.service.PatInfoService;
 import cn.congee.api.util.IdcardUtils;
+import cn.congee.api.util.PasswordUtil;
+import cn.congee.api.util.RandomValue;
 import cn.congee.api.util.Validates;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -16,10 +19,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -227,6 +227,47 @@ public class PatInfoServiceImpl implements PatInfoService {
         Map<String, List<PatInfo>> map = list.stream().collect(Collectors.groupingBy(PatInfo::getPatAddress));
 
         return new JsonResult<>(list);
+    }
+
+    /**
+     * 新增随机用户信息
+     *
+     * @return
+     */
+    @Override
+    public JsonResult addPatInfo() {
+        //使用Random生成随机的boolean
+        String idNo = RandomValue.getIdNo(new Random().nextBoolean());
+        boolean flag = new Random().nextBoolean();
+        if(Boolean.TRUE.equals(flag)){
+            log.info("获取到的性别类型是: " + flag);
+        }
+        PatInfo patInfo = PatInfo.builder()
+//                .patId((int)(Math.random()*1001))
+                .patName(RandomValue.getChineseName())
+                .patPass(PasswordUtil.randomPassword())
+                .patAge(RandomValue.IdNOToAge(idNo))
+                .patPhone(RandomValue.getTel())
+                .patIdcard(idNo)
+                .patAddress(RandomValue.getRoad())
+                .patGender(IdcardUtils.getGenderByIdCard(idNo))
+                .birthday(IdcardUtils.getBirthDay(idNo))
+                .build();
+        String gender = IdcardUtils.getGenderByIdCard(idNo);
+        if (StringUtils.isNotBlank(gender)){
+            patInfo.setPatGender(CommonDic.SexDic.MALE.getCode().equalsIgnoreCase("男".equals(gender) ? "1" : "2") ? "M" : "F");
+        }
+        System.out.println(patInfo.toString());
+        boolean b = patInfoMapper.savePatInfo(patInfo);
+        JsonResult result = new JsonResult();
+        if (b) {
+            PatInfo patInfoByIdNo = patInfoMapper.findPatInfoByIdNo(idNo);
+            patInfo.setPatId(patInfoByIdNo.getPatId());
+            result.setData(patInfo);
+        }
+        result.setSuccess(b);
+        result.setMessage("新增用户信息成功");
+        return result;
     }
 
 

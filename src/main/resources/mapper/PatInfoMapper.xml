@@ -116,6 +116,16 @@
             pat_id = #{item.patId,jdbcType = VARCHAR}
         </foreach>
     </update>
+    <select id="findPatInfoByIdNo" resultMap="BaseResultMap" parameterType="java.lang.String">
+        SELECT
+        <include refid="Base_Column_List"></include>
+        FROM
+        pat_info
+        WHERE
+        pat_idcard = #{idNo,jdbcType = VARCHAR}
+        AND
+        1 = 1
+    </select>
     <select id="findPatInfoByPatNameAndPatGender" parameterType="java.lang.String" resultMap="BaseResultMap">
         SELECT
         <include refid="Base_Column_List"></include>

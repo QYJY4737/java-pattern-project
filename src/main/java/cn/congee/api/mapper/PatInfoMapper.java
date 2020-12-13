@@ -58,6 +58,13 @@ public interface PatInfoMapper extends BaseMapper<PatInfo> {
      */
     boolean updateBatch(List<Integer> patIdList);
 
+    /**
+     * 根据idNo查询
+     * @param idNo
+     * @return
+     */
+    PatInfo findPatInfoByIdNo(@Param(value = "idNo") String idNo);
+
     List<PatInfo> findLikeConcat(@Param(value = "keyword") String keyword);
 
     List<PatInfo> queryTheSameAge(@Param("ages") Set<Integer> ages);
