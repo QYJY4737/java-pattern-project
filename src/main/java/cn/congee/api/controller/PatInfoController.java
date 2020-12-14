@@ -1,5 +1,6 @@
 package cn.congee.api.controller;
 
+import cn.congee.api.annotation.RequestLimit;
 import cn.congee.api.common.JsonResult;
 import cn.congee.api.common.PageResult;
 import cn.congee.api.entity.PatInfo;
@@ -46,6 +47,12 @@ public class PatInfoController {
         return patInfoService.findAll();
     }
 
+    //{
+    //    "code": 9999,
+    //    "success": true,
+    //    "message": "操作过于频繁"
+    //}
+    @RequestLimit        //被该注解注释默认：一分钟内请求超过15次会被提示上述情况
     @GetMapping(value = "/findById/{patId}")
     @ApiOperation(value = "[4]-根据patId查询用户")
     public JsonResult<PatInfo> findById(@PathVariable(value = "patId") Integer patId){
